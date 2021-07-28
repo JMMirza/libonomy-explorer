@@ -6,9 +6,8 @@ const nodeInfo = new mongoose.Schema({
         "protocol_version": {
             "p2p": String,
             "block": String,
-            "app": {
-                'type': { type: String, default: "0" }
-            }
+            "app": { type: String, default: "0" }
+
         },
         "listen_addr": String,
         "network": String,
