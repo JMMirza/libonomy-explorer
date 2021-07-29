@@ -2,8 +2,8 @@ const express = require('express')
 const app = express();
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-
-// routes
+const EventEmitter = require('events')
+    // routes
 app.use('/', require('./routes/routes.js'));
 
 const socket = require("socket.io");
@@ -21,4 +21,5 @@ io.on('connection', async(socket) => {
         console.log("user disconnected");
     })
 })
+
 module.exports = io

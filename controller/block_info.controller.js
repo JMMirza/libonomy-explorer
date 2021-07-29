@@ -7,18 +7,18 @@ let response = null
 let data = null
 
 module.exports = async function blockInfo() {
-    const latest_block = await Block.find().sort({ _id: -1 }).limit(1)
-    if (latest_block.length !== 0) {
-        height = Number(latest_block[0].block_meta.header.height) + 1
-
-    } else {
-        height = 1
-    }
     if (occupied === true) {
         // console.log(old_height);
-        response = "Wait!!! block is sent to the database"
+        response = "waiting for previous job to complete(block)"
     } else {
         occupied = true
+        const latest_block = await Block.find().sort({ _id: -1 }).limit(1)
+        if (latest_block.length !== 0) {
+            height = Number(latest_block[0].block_meta.header.height) + 1
+        } else {
+            height = 1
+        }
+
         axios.get(`http://18.206.253.182:1300/blocks/${height}`)
             .then(async function(res) {
                 data = res.data

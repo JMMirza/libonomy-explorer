@@ -1,5 +1,9 @@
 const mongoose = require('mongoose')
-const io = require('../index')
+let io
+setTimeout(() => {
+    io = require('../index')
+}, 10);
+
 const signature_schema = new mongoose.Schema({
     "pub_key": {
         'type': { type: String },
@@ -66,7 +70,7 @@ const transaction = new mongoose.Schema({
 
 transaction.post('save', (txs) => {
     // console.log(typeof(txs));
-    // io.emit('latestTxs', txs)
+    io.emit('latestTxs', txs)
 })
 
 const Transaction = mongoose.model('Transaction', transaction)

@@ -13,13 +13,12 @@ module.exports = async function transaction() {
         height = 1
     }
     if (occupied === true) {
-        response = "waiting for first one"
+        response = "waiting for previous job to complete(txs)"
     } else {
         occupied = true
         axios.get(`http://18.206.253.182:1300/txs?tx.minheight=${height}`)
             .then(async function(res) {
                 const data = res.data
-                console.log(data);
                 if (Object.keys(data.txs).length === 0 || data.txs[1] === undefined) {
                     occupied = false
                     response = "No transaction data to insert"
@@ -27,7 +26,7 @@ module.exports = async function transaction() {
                     let arr = data.txs
                     let txs = null
                     for (let index = 0; index < arr.length; index++) {
-                        txs = await Transaction.findOne({ 'txhash': data.txs[index].txhash })
+                        txs = await Transaction.findOne({ 'txhash': arr[index].txhash })
                         if (txs !== null) {
                             response = "transaction cannot inserted"
                         } else {
@@ -35,12 +34,12 @@ module.exports = async function transaction() {
                             response = "transaction added"
                         }
                     }
-                    occupied = false
                 }
             })
             .catch(function(error) {
                 response = error.message;
             })
+        occupied = false
     }
     return { message: response, height: height }
 }

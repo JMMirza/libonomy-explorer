@@ -103,9 +103,7 @@ const block = new mongoose.Schema({
 })
 block.post('save', function(block) {
     // return block
-    // console.log(doc);
     io.emit('latestBlock', block)
-
 })
 
 const Block = mongoose.model('Block', block)

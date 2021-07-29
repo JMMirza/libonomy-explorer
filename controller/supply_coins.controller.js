@@ -6,7 +6,7 @@ let occupied = false
 
 module.exports = async function supply_coins() {
     if (occupied === true) {
-        response = "waiting for previous job to complete"
+        response = "waiting for previous job to complete(coin)"
     } else {
         occupied = true
         axios.get('http://18.206.253.182:1300/supply/total')
