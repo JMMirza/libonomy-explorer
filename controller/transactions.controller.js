@@ -3,6 +3,7 @@ const Transaction = require('../model/transactions.model')
 let height = 0;
 let occupied = false
 let response = null
+
 module.exports = async function transaction() {
     // console.log(response);
     const latest_txs = await Transaction.find().sort({ _id: -1 }).limit(1)
@@ -18,7 +19,9 @@ module.exports = async function transaction() {
         axios.get(`http://18.206.253.182:1300/txs?tx.minheight=${height}`)
             .then(async function(res) {
                 const data = res.data
+                console.log(data);
                 if (Object.keys(data.txs).length === 0 || data.txs[1] === undefined) {
+                    occupied = false
                     response = "No transaction data to insert"
                 } else {
                     let arr = data.txs
@@ -32,12 +35,12 @@ module.exports = async function transaction() {
                             response = "transaction added"
                         }
                     }
+                    occupied = false
                 }
             })
             .catch(function(error) {
                 response = error.message;
             })
     }
-    occupied = false
     return { message: response, height: height }
 }

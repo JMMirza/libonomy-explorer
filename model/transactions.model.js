@@ -66,7 +66,7 @@ const transaction = new mongoose.Schema({
 
 transaction.post('save', (txs) => {
     // console.log(typeof(txs));
-    io.emit('latestTxs', txs)
+    // io.emit('latestTxs', txs)
 })
 
 const Transaction = mongoose.model('Transaction', transaction)
