@@ -26,8 +26,8 @@ module.exports = {
                 }
 
             })
-            const data = await Transaction.find().sort({ _id: 1 }).limit(30)
-            console.log(req.query, total_count);
+            const data = await Transaction.find({ 'height': req.query['tx.minheight'] }).sort({ _id: 1 }).limit(30)
+                // console.log(req.query['tx.minheight'], total_count);
             res.send(data)
         }
     }

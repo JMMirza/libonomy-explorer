@@ -28,7 +28,7 @@ module.exports = async function blockInfo() {
                     occupied = false
                 } else {
                     await Block.create(data)
-                    console.log(occupied);
+                        // console.log(occupied/);
                     occupied = false
                     response = 'block inserted'
                 }

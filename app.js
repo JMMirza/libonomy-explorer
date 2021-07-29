@@ -11,26 +11,14 @@ cron.schedule('*/1 * * * * *', async() => {
     console.log(block);
 })
 cron.schedule('*/1 * * * * *', async() => {
-    if (block.message === null) {
-        console.log('waiting for block');
-    } else {
-        coin = await supply_coins()
-        console.log(coin);
-    }
+    coin = await supply_coins()
+    console.log(coin);
 })
 cron.schedule('*/1 * * * * *', async() => {
-    if (coin.message === null) {
-        console.log('waiting for coin');
-    } else {
-        node = await node_info()
-        console.log(node);
-    }
+    node = await node_info()
+    console.log(node);
 })
 cron.schedule('*/1 * * * * *', async() => {
-    if (node.message === null) {
-        console.log('waiting for node information');
-    } else {
-        txs = await transaction()
-        console.log(txs);
-    }
+    txs = await transaction()
+    console.log(txs);
 })
