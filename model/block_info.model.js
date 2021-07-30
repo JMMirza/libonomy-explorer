@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const io = require('../index')
+let io = require('../index')
 
 const pri_commits = new mongoose.Schema({
     'type': { type: Number },

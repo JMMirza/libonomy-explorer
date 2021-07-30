@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
-let io
-setTimeout(() => {
-    io = require('../index')
-}, 10);
+let io = require('../index')
+    // setTimeout(() => {
+    //     io = require('../index')
+    // }, 10);
 
 const signature_schema = new mongoose.Schema({
     "pub_key": {
