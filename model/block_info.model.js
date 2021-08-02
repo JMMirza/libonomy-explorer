@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-let io = require('../index')
 
 const pri_commits = new mongoose.Schema({
     'type': { type: Number },
@@ -100,10 +99,6 @@ const block = new mongoose.Schema({
             "precommits": [pri_commits]
         }
     }
-})
-block.post('save', function(block) {
-    // return block
-    io.emit('latestBlock', block)
 })
 
 const Block = mongoose.model('Block', block)
