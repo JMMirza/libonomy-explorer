@@ -24,16 +24,19 @@ module.exports = async function transaction() {
                     response = "No transaction data to insert"
                 } else {
                     let arr = data.txs
-                    let txs = null
-                    for (let index = 0; index < arr.length; index++) {
-                        txs = await Transaction.findOne({ 'txhash': arr[index].txhash })
-                        if (txs !== null) {
-                            response = "transaction cannot inserted"
-                        } else {
-                            await Transaction.create(arr[index])
-                            response = "transaction added"
-                        }
+                    const firstTx = await Transaction.find({ 'txhash': arr[0].txhash })
+                    if (firstTx.length !== 0) {
+                        arr.splice(0, 1)
                     }
+                    let txHash = arr.map(element => element.txhash)
+                    let dupTxs = await Transaction.find({ 'txhash': { $in: txHash } })
+                    if (dupTxs.length !== 0) {
+                        response = "transaction cannot inserted"
+                    } else {
+                        await Transaction.insertMany(arr)
+                        response = "transaction added"
+                    }
+
                 }
             })
             .catch(function(error) {

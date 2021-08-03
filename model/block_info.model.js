@@ -1,21 +1,5 @@
 const mongoose = require('mongoose')
 
-const pri_commits = new mongoose.Schema({
-    'type': { type: Number },
-    "height": String,
-    "round": String,
-    "block_id": {
-        "hash": String,
-        "parts": {
-            "total": String,
-            "hash": String
-        }
-    },
-    "timestamp": Date,
-    "validator_address": String,
-    "validator_index": String,
-    "signature": String
-})
 
 const block = new mongoose.Schema({
     "block_meta": {
@@ -96,7 +80,22 @@ const block = new mongoose.Schema({
                     "hash": String
                 }
             },
-            "precommits": [pri_commits]
+            "precommits": [{
+                'type': { type: Number },
+                "height": String,
+                "round": String,
+                "block_id": {
+                    "hash": String,
+                    "parts": {
+                        "total": String,
+                        "hash": String
+                    }
+                },
+                "timestamp": Date,
+                "validator_address": String,
+                "validator_index": String,
+                "signature": String
+            }]
         }
     }
 })

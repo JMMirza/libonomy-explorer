@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-let io = require('../index')
+    // let io = require('../index')
     // setTimeout(() => {
     //     io = require('../index')
     // }, 10);
@@ -68,10 +68,10 @@ const transaction = new mongoose.Schema({
     }]
 })
 
-transaction.post('save', (txs) => {
-    // console.log(typeof(txs));
-    io.emit('latestTxs', txs)
-})
+// transaction.post('save', (txs) => {
+//     // console.log(typeof(txs));
+//     io.emit('latestTxs', txs)
+// })
 
 const Transaction = mongoose.model('Transaction', transaction)
 

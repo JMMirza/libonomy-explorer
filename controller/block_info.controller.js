@@ -2,50 +2,56 @@ const axios = require('axios')
 const Block = require('../model/block_info.model')
 
 let height = 0
+let latest_height = 0
+let compareHeight = 0
 let occupied = false
 let response = null
-let dataArr = []
+let sumHeight = 0
 
-function loop(height) {
-    axios.get(`http://18.206.253.182:1300/blocks/${height}`)
-        .then(function(res) {
-            return res.data
-        })
-        .catch(function(error) {
-            console.log("loop func");
-            return error.message
-        })
-}
 module.exports = async function blockInfo() {
-    const latest_block = await Block.find().sort({ _id: -1 }).limit(1)
-    if (latest_block.length !== 0) {
-        height = Number(latest_block[0].block_meta.header.height) + 1
-    } else {
-        height = 1
-    }
     if (occupied === true) {
         response = "waiting for previous job to complete(block)"
+        console.log({ message: response, height: height })
     } else {
+        let dataArr = []
+        let promiseArr = []
         occupied = true
-        for (let index = 0; index < 3; index++) {
-            console.log(index, height);
-            const data = loop(height)
-            console.log(data);
-            dataArr.push(data)
-            height++
-        }
-        const dataHeight = dataArr.map(element => element.block_meta.header.height)
-        const dupBlock = await Block.find({ 'block_meta.header.height': { $in: dataHeight } })
-        if (dupBlock.length !== 0 || dataArr.length === 0) {
-            response = "block cannot inserted"
-            dataArr.splice(0, 10)
-            occupied = false
+        axios.get('http://18.206.253.182:1300/blocks/latest')
+            .then(async function(res) {
+                compareHeight = Number(res.data.block_meta.header.height)
+            })
+            .catch(ex => {
+                console.log(ex.message);
+            })
+        if (latest_height === 0) {
+            const latest_block = await Block.findOne().sort({ _id: -1 })
+            latest_block !== null ? height = Number(latest_block.block_meta.header.height) + 1 : height = 1
         } else {
+            height = latest_height + 1
+        }
+        if (compareHeight - height >= 100) {
+            sumHeight = 100
+        } else {
+            sumHeight = compareHeight - height
+        }
+        for (let index = height; index < (height + sumHeight); index++) {
+            const res = axios.get(`http://18.206.253.182:1300/blocks/${index}`)
+            promiseArr.push(res)
+        }
+        (await Promise.all(promiseArr)).map(element => {
+            dataArr.push(element.data)
+        })
+
+        try {
             await Block.insertMany(dataArr)
-            dataArr.splice(0, 10)
             response = "blocks inserted"
+            latest_height = parseInt(dataArr[dataArr.length - 1].block_meta.header.height)
             occupied = false
+            console.log({ message: response, height: height })
+        } catch (ex) {
+            response = ex.message
+            occupied = false
+            console.log({ message: response, height: height })
         }
     }
-    return { message: response, height: height }
 }
