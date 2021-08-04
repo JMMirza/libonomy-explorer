@@ -1,8 +1,6 @@
 const mongoose = require('mongoose')
-    // let io = require('../index')
-    // setTimeout(() => {
-    //     io = require('../index')
-    // }, 10);
+let io = require('../index')
+
 
 const signature_schema = new mongoose.Schema({
     "pub_key": {
@@ -48,6 +46,7 @@ const transaction = new mongoose.Schema({
     "raw_log": String,
     "logs": [log_schema],
     "gas_wanted": String,
+    "code": Number,
     "gas_used": String,
     "tx": {
         'type': { type: String },
@@ -68,11 +67,18 @@ const transaction = new mongoose.Schema({
     }]
 })
 
-// transaction.post('save', (txs) => {
-//     // console.log(typeof(txs));
-//     io.emit('latestTxs', txs)
-// })
-
+transaction.post('insertMany', (txs) => {
+    // console.log(typeof(txs));
+    io.emit('latestTxs', txs)
+})
+transaction.statics.customFilter = function(tx) {
+    return this.find({
+        $and: [
+            { $or: [{ undefined: { $eq: tx.city } }, { 'city': tx.city }] },
+            { $or: [{ undefined: { $eq: tx.name } }, { 'name': tx.name }] }
+        ]
+    })
+}
 const Transaction = mongoose.model('Transaction', transaction)
 
 module.exports = Transaction

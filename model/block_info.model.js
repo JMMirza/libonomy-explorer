@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-
+const io = require('../index')
 
 const block = new mongoose.Schema({
     "block_meta": {
@@ -99,7 +99,10 @@ const block = new mongoose.Schema({
         }
     }
 })
-
+block.post('insertMany', (res) => {
+    io.emit('latestBlock', res)
+        // console.log(res[0]);
+})
 const Block = mongoose.model('Block', block)
 
 module.exports = Block

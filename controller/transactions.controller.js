@@ -5,10 +5,9 @@ let occupied = false
 let response = null
 
 module.exports = async function transaction() {
-    // console.log(response);
-    const latest_txs = await Transaction.find().sort({ _id: -1 }).limit(1)
-    if (latest_txs.length !== 0) {
-        height = Number(latest_txs[0].height)
+    const latest_txs = await Transaction.findOne().sort({ _id: -1 })
+    if (Object.keys(latest_txs).length !== 0) {
+        height = Number(latest_txs.height)
     } else {
         height = 1
     }
@@ -22,6 +21,7 @@ module.exports = async function transaction() {
                 if (Object.keys(data.txs).length === 0 || data.txs[1] === undefined) {
                     occupied = false
                     response = "No transaction data to insert"
+                    console.log({ message: response, height: height });
                 } else {
                     let arr = data.txs
                     const firstTx = await Transaction.find({ 'txhash': arr[0].txhash })
@@ -32,17 +32,19 @@ module.exports = async function transaction() {
                     let dupTxs = await Transaction.find({ 'txhash': { $in: txHash } })
                     if (dupTxs.length !== 0) {
                         response = "transaction cannot inserted"
+                        console.log({ message: response, height: height });
                     } else {
                         await Transaction.insertMany(arr)
                         response = "transaction added"
+                        console.log({ message: response, height: height });
                     }
-
                 }
             })
             .catch(function(error) {
                 response = error.message;
+                console.log({ message: response, height: height });
             })
         occupied = false
     }
-    return { message: response, height: height }
+    return
 }

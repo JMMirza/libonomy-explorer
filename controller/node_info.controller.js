@@ -16,6 +16,7 @@ module.exports = async function node_info() {
                     await Node_Info.create(data)
                     occupied = false
                     response = "node inserted"
+                    console.log({ message: response });
                 } else {
                     occupied = false
                     response = "node information already exist"
@@ -23,7 +24,7 @@ module.exports = async function node_info() {
             })
             .catch(function(error) {
                 response = error.message
+                console.log({ message: response });
             })
     }
-    return { message: response }
 }
