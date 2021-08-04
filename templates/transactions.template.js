@@ -14,21 +14,10 @@ module.exports = {
         }
     },
     searchTxs: async(req, res) => {
-        if (Object.keys(req.query).length === 0) {
-            return res.send("empty")
-        } else {
-            let total_count = null
-            Transaction.estimatedDocumentCount({}, function(err, result) {
-                if (err) {
-                    console.log(err)
-                } else {
-                    total_count = result
-                }
+        try {
 
-            })
-            const data = await Transaction.find({ 'height': req.query['tx.minheight'] }).sort({ _id: 1 }).limit(30)
-                // console.log(req.query['tx.minheight'], total_count);
-            res.send(data)
+        } catch (error) {
+
         }
     }
 }

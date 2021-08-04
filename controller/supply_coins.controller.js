@@ -18,16 +18,19 @@ module.exports = async function supply_coins() {
                     occupied = false
                     response = "no new coin to insert"
                     height = data.height
+                    console.log({ message: response, height: height });
                 } else {
                     await Coins.create(data)
                     occupied = false
                     response = 'coin inserted'
                     height = data.height
+                    console.log({ message: response, height: height });
                 }
             })
             .catch(function(error) {
                 response = error.message
+                console.log({ message: response });
             })
     }
-    return { message: response, height: height }
+
 }
