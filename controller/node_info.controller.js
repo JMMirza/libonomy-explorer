@@ -6,6 +6,7 @@ let occupied = false
 module.exports = async function node_info() {
     if (occupied === true) {
         response = "waiting for previous job to complete(node)"
+        console.log({ message: response });
     } else {
         occupied = true
         axios.get('http://18.206.253.182:1300/node_info')
@@ -20,6 +21,7 @@ module.exports = async function node_info() {
                 } else {
                     occupied = false
                     response = "node information already exist"
+                    console.log({ message: response });
                 }
             })
             .catch(function(error) {

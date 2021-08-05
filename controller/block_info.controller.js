@@ -4,6 +4,8 @@ const Block = require('../model/block_info.model')
 let height = 0
 let latest_height = 0
 let occupied = false
+let compareHeight = 0
+let sumHeight = 0
 
 module.exports = async function blockInfo() {
     if (occupied === true) {
@@ -12,27 +14,26 @@ module.exports = async function blockInfo() {
     } else {
         let dataArr = []
         let promiseArr = []
-        let compareHeight = 0
         occupied = true
-        axios.get('http://18.206.253.182:1300/blocks/latest')
-            .then(async function(res) {
-                compareHeight = Number(res.data.block_meta.header.height)
-            })
-            .catch(ex => {
-                console.log(ex.message);
-            })
+        try {
+            const latestBlock = await axios.get('http://18.206.253.182:1300/blocks/latest')
+            compareHeight = Number(latestBlock.data.block_meta.header.height)
+        } catch (error) {
+            console.log(error.message);
+        }
+
         if (latest_height === 0) {
             const latest_block = await Block.findOne().sort({ _id: -1 })
             latest_block !== null ? height = Number(latest_block.block_meta.header.height) + 1 : height = 1
         } else {
             height = latest_height + 1
         }
-        if (latest_height === height) {
-            console.log("block already inserted");
+        if (compareHeight === height) {
+            console.log({ message: "block already inserted", height: height });
+            occupied = false
         } else {
-            let sumHeight = 0
-            if (compareHeight - height >= 200) {
-                sumHeight = 200
+            if (compareHeight - height >= 160) {
+                sumHeight = 160
             } else {
                 sumHeight = compareHeight - height
             }
@@ -55,5 +56,6 @@ module.exports = async function blockInfo() {
                 console.log({ message: response, height: height })
             }
         }
+
     }
 }

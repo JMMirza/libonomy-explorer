@@ -6,20 +6,15 @@ const transaction = require('../controller/transactions.controller')
 
 module.exports = function cronJobs() {
     cron.schedule('*/1 * * * * *', async() => {
-            try {
-                await blockInfo()
-            } catch (ex) {
-                console.log(ex.message);
-            }
-
-        })
-        // cron.schedule('*/1 * * * * *', async() => {
-        //     await supply_coins()
-        // })
-        // cron.schedule('*/1 * * * * *', async() => {
-        //     await node_info()
-        // })
-        // cron.schedule('*/1 * * * * *', async() => {
-        //     await transaction()
-        // })
+        await blockInfo()
+    })
+    cron.schedule('*/1 * * * * *', async() => {
+        await supply_coins()
+    })
+    cron.schedule('*/1 * * * * *', async() => {
+        await node_info()
+    })
+    cron.schedule('*/1 * * * * *', async() => {
+        await transaction()
+    })
 }

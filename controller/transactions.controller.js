@@ -6,13 +6,15 @@ let response = null
 
 module.exports = async function transaction() {
     const latest_txs = await Transaction.findOne().sort({ _id: -1 })
-    if (Object.keys(latest_txs).length !== 0) {
+        // console.log(latest_txs);
+    if (latest_txs !== null) {
         height = Number(latest_txs.height)
     } else {
         height = 1
     }
     if (occupied === true) {
         response = "waiting for previous job to complete(txs)"
+        console.log({ message: response, height: height });
     } else {
         occupied = true
         axios.get(`http://18.206.253.182:1300/txs?tx.minheight=${height}`)
@@ -46,5 +48,5 @@ module.exports = async function transaction() {
             })
         occupied = false
     }
-    return
+
 }
