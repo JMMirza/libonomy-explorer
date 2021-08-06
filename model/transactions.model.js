@@ -51,7 +51,7 @@ const transaction = new mongoose.Schema({
             "memo": String
         }
     },
-    "timestamp": Date,
+    "timestamp": String,
     "events": [{
         'type': { type: String },
         "attributes": [{

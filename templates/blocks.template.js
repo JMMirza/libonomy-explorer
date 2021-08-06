@@ -1,6 +1,5 @@
 const Block = require('../model/block_info.model')
 
-
 module.exports = {
     blockByHeight: async(req, res) => {
         try {
