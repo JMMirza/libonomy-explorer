@@ -10,7 +10,7 @@ let sumHeight = 0
 module.exports = async function blockInfo() {
     if (occupied === true) {
         response = "waiting for previous job to complete(block)"
-        console.log({ message: response, height: height })
+            // console.log({ message: response, height: height })
     } else {
         let dataArr = []
         let promiseArr = []
@@ -32,8 +32,8 @@ module.exports = async function blockInfo() {
             console.log({ message: "block already inserted", height: height });
             occupied = false
         } else {
-            if (compareHeight - height >= 160) {
-                sumHeight = 160
+            if (compareHeight - height >= 50) {
+                sumHeight = 50
             } else {
                 sumHeight = compareHeight - height
             }
@@ -49,7 +49,7 @@ module.exports = async function blockInfo() {
                 response = "blocks inserted"
                 if (dataArr.length !== 0) { latest_height = parseInt(dataArr[dataArr.length - 1].block_meta.header.height) }
                 occupied = false
-                console.log({ message: response, height: height })
+                    // console.log({ message: response, height: height })
             } catch (ex) {
                 response = ex.message
                 occupied = false

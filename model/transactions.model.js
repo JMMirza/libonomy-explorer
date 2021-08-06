@@ -1,84 +1,69 @@
 const mongoose = require('mongoose')
 let io = require('../index')
 
-
-const signature_schema = new mongoose.Schema({
-    "pub_key": {
-        'type': { type: String },
-        "value": String
-    },
-    "signature": String
-})
-
-const amount_schema = new mongoose.Schema({
-    "denom": String,
-    "amount": String
-})
-
-const msg_schema = new mongoose.Schema({
-    'type': { type: String },
-    "value": {
-        "from_address": String,
-        "to_address": String,
-        "amount": [amount_schema]
-    }
-})
-
-const attributes_schema = new mongoose.Schema({
-    "key": String,
-    "value": String
-})
-
-const event_schema = new mongoose.Schema({
-    'type': { type: String },
-    "attributes": [attributes_schema]
-})
-
-const log_schema = new mongoose.Schema({
-    "msg_index": Number,
-    "success": Boolean,
-    "log": String,
-    "events": [event_schema]
-})
 const transaction = new mongoose.Schema({
     "height": String,
     "txhash": { type: String, unique: true },
     "raw_log": String,
-    "logs": [log_schema],
+    "logs": [{
+        "msg_index": Number,
+        "success": Boolean,
+        "log": String,
+        "events": [{
+            'type': { type: String },
+            "attributes": [{
+                "key": String,
+                "value": String
+            }]
+        }]
+    }],
     "gas_wanted": String,
     "code": Number,
     "gas_used": String,
     "tx": {
         'type': { type: String },
         "value": {
-            "msg": [msg_schema],
+            "msg": [{
+                'type': { type: String },
+                "value": {
+                    "from_address": String,
+                    "to_address": String,
+                    "amount": [{
+                        "denom": String,
+                        "amount": String
+                    }]
+                }
+            }],
             "fee": {
-                "amount": [amount_schema],
+                "amount": [{
+                    "denom": String,
+                    "amount": String
+                }],
                 "gas": String
             },
-            "signatures": [signature_schema],
+            "signatures": [{
+                "pub_key": {
+                    'type': { type: String },
+                    "value": String
+                },
+                "signature": String
+            }],
             "memo": String
         }
     },
     "timestamp": Date,
     "events": [{
         'type': { type: String },
-        "attributes": [attributes_schema]
+        "attributes": [{
+            "key": String,
+            "value": String
+        }]
     }]
 })
 
 transaction.post('insertMany', (txs) => {
-    // console.log(typeof(txs));
     io.emit('latestTxs', txs)
 })
-transaction.statics.customFilter = function(tx) {
-    return this.find({
-        $and: [
-            { $or: [{ undefined: { $eq: tx.city } }, { 'city': tx.city }] },
-            { $or: [{ undefined: { $eq: tx.name } }, { 'name': tx.name }] }
-        ]
-    })
-}
 const Transaction = mongoose.model('Transaction', transaction)
 
 module.exports = Transaction

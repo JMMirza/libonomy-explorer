@@ -3,7 +3,6 @@ module.exports = {
     supplyCoin: async(req, res) => {
         try {
             const coin = await Coins.find().sort({ _id: -1 }).limit(1)
-            console.log(coin[0].result[0].denom);
             if (coin.length > 0) {
                 return res.status(200).send(coin[0])
             } else {

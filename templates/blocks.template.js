@@ -4,7 +4,7 @@ const Block = require('../model/block_info.model')
 module.exports = {
     blockByHeight: async(req, res) => {
         try {
-            const block = await Block.findOne({ 'block_meta.header.height': req.params.id })
+            const block = await Block.findOne({ 'block_meta.header.height': req.params.height })
             if (block) {
                 return res.status(200).send(block)
             } else {
