@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 require('dotenv').config()
 module.exports = function() {
-    mongoose.connect(process.env.MONGO_ATLAS, {
+    mongoose.connect("mongodb://localhost/libonomy", {
             useNewUrlParser: true,
             useCreateIndex: true,
             useUnifiedTopology: true,
